@@ -25,21 +25,22 @@ class ViewController: UIViewController {
     }
 
     @IBAction func onLogin(sender: AnyObject) {
-        //TwitterClient caches tokens
-        TwitterClient.sharedInstance.requestSerializer.removeAccessToken()
-        TwitterClient.sharedInstance.fetchRequestTokenWithPath("oauth/request_token", method: "GET", callbackURL: NSURL(string: "cptwitterdemo://oauth"), scope: nil, success: { (requestToken: BDBOAuth1Credential!) -> Void in
-            print("got request token")
-            var authURL = NSURL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")
-            UIApplication.sharedApplication().openURL(authURL!)
-            //different protocols open different things
-            //https, sites; loc, maps
-            //cptwitterdemo is a protocol
-            
-            }) { (error: NSError!) -> Void in
-                print("Failed to get request token")
-                //time out of sync can result in fail to get token
+        TwitterClient.sharedInstance.loginWithCompletion(){
+            (user: User?, error: NSError?) in
+            if user != nil {
+                //perform segue if login successful
+                self.performSegueWithIdentifier("loginSegue", sender: self)
+            } else {
+                //handle login error
+            }
         }
+        
     }
+        
+        
+        
+        
+        
 
 }
 
