@@ -16,7 +16,7 @@ class User: NSObject {
     
     var name: String?
     var screenname: String?
-    var profileImageUrl: String?
+    var profileUrl: NSURL?
     var tagline: String?
     var dictionary: NSDictionary
     
@@ -25,77 +25,64 @@ class User: NSObject {
     init(dictionary: NSDictionary) {
         name = dictionary["name"] as? String
         screenname = dictionary["screen_name"] as? String
-        profileImageUrl = dictionary["profile_image_url"] as? String
+        //profileImageUrl = dictionary["profile_image_url"] as? String
+        let profileUrlString = dictionary["profile_image_url_https"] as? String
+        if let profileUrlString = profileUrlString {
+            profileUrl = NSURL(string: profileUrlString)
+        }
+        
         tagline = dictionary["description"] as? String
         self.dictionary = dictionary
     }
     
     //persistence, keep user data
     
+    static var _currentUser: User?
+    
+    
     class var currentUser: User? {
         get {
-        //currentUser is computed property
+            //currentUser is computed property
             if _currentUser == nil {
-                print("current user is nil")
-                var data = NSUserDefaults.standardUserDefaults().objectForKey(currentUserKey) as? NSData
-                if data != nil {
-                    do {
-                        var dictionary = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions(rawValue: 0)) as? NSData
-                        let userDictionary: NSDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(dictionary!) as! NSDictionary
-                        _currentUser = User(dictionary: userDictionary)
-                        print("there exists a current user")
-                    } catch {
-                        print("exception thrown at User class")
-                    }
+            
+            let defaults = NSUserDefaults.standardUserDefaults()
         
-                } //catch {
-                //check if there exists a currentUser or just booting up
-                    //print("no user exists yet")
-                //}
-        
+            let userData = defaults.objectForKey("currentUserData") as? NSData
+            //NSUserDefaults like "cookies"
+            
+                if let userData = userData {
+                    let dictionary = try! NSJSONSerialization.JSONObjectWithData(userData, options: []) as! NSDictionary
+                    
+                    
+                    _currentUser = User(dictionary:dictionary)
+                }
             }
-            print("GETTING")
         
             return _currentUser
         }
         set(user){
             _currentUser = user
             
-            print("SETTING")
             
-            let userData: NSData = NSKeyedArchiver.archivedDataWithRootObject((user?.dictionary)!)
-            //let userDictionary: NSDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(userData) as! NSDictionary
+            let defaults = NSUserDefaults.standardUserDefaults()
             
-            //to maintain persistence, User has to implement NSCoding to describe how you want to serialize and deserialize objects, JSON is also serializable by default
-            //if _currentUser != nil {
-            
-            
-            if _currentUser != nil {
-                do {
-                    var data = try NSJSONSerialization.JSONObjectWithData(userData, options:NSJSONReadingOptions(rawValue: 0))
-                    
-                    
-                    //30.09 https://vimeo.com/107319225
-                    
-                    
-                    
-                    //if current user is not nil, change to JSON
-                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey)
-                    //saving/storing the current user to be perhaps accessed later and tying the data with a key
-                    NSUserDefaults.standardUserDefaults().synchronize()
-                    //saving
-                    print("user archived")
+            if let user = user {
+                let data = try! NSJSONSerialization.dataWithJSONObject(user.dictionary, options: [])
                 
-                    //with throws, needs to try
-                } catch {
-                    print("clearing out current user (logging out)")
-                    
-                }
+                defaults.setObject(data, forKey: "currenUserData")
             } else {
-                NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey)
-                NSUserDefaults.standardUserDefaults().synchronize()
+                defaults.setObject(nil, forKey: "currentUserData")
             }
+                
+            
+            
+            defaults.setObject(user, forKey: "currentUser")
+            //must comply with NSCoding, but can "hack" and change user back to JSON.
+            
+            defaults.synchronize()
         }
+        
+            
     }
 
 }

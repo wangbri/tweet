@@ -67,6 +67,8 @@ class TwitterClient: BDBOAuth1SessionManager {
                 User.currentUser = user //user is now set as currentUser
                 print("user: \(user.name)")
                 
+                
+                
                 self.loginCompletion?(user: user, error: nil)
                 
                 }, failure: { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
