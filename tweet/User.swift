@@ -12,6 +12,9 @@ var _currentUser: User?
 //global object as a "class/type variable"
 let currentUserKey = "kCurrentUserKey"
 
+let userDidLoginNotification = "userDidLoginNotification"
+let userDidLogoutNotification = "userDidLogoutNotification"
+
 class User: NSObject {
     
     var name: String?
@@ -37,52 +40,48 @@ class User: NSObject {
     
     //persistence, keep user data
     
-    static var _currentUser: User?
-    
+    func logout() {
+        User.currentUser = nil
+        TwitterClient.sharedInstance.requestSerializer.removeAccessToken()
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(userDidLogoutNotification, object: nil)
+        //defaultcenter same as singleton pattern
+        
+        
+    }
     
     class var currentUser: User? {
         get {
-            //currentUser is computed property
-            if _currentUser == nil {
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
+        if _currentUser == nil {
+        //logged out or just boot up
+        let data = NSUserDefaults.standardUserDefaults().objectForKey(currentUserKey) as? NSData
+        if data != nil {
+        let dictionary: NSDictionary?
+        do {
+        try dictionary = NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as? NSDictionary
+        _currentUser = User(dictionary: dictionary!)
+    } catch {
+        print(error)
+        }
+        }
+        }
+        return _currentUser
+        }
         
-            let userData = defaults.objectForKey("currentUserData") as? NSData
-            //NSUserDefaults like "cookies"
-            
-                if let userData = userData {
-                    let dictionary = try! NSJSONSerialization.JSONObjectWithData(userData, options: []) as! NSDictionary
-                    
-                    
-                    _currentUser = User(dictionary:dictionary)
+        
+        set(user) {
+            _currentUser = user
+            //User need to implement NSCoding; but, JSON also serialized by default
+            if let _ = _currentUser {
+                var data: NSData?
+                do {
+                    try data = NSJSONSerialization.dataWithJSONObject(user!.dictionary, options: .PrettyPrinted)
+                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey)
+                } catch {
+                    print(error)
                 }
             }
-        
-            return _currentUser
         }
-        set(user){
-            _currentUser = user
-            
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            
-            if let user = user {
-                let data = try! NSJSONSerialization.dataWithJSONObject(user.dictionary, options: [])
-                
-                defaults.setObject(data, forKey: "currenUserData")
-            } else {
-                defaults.setObject(nil, forKey: "currentUserData")
-            }
-                
-            
-            
-            defaults.setObject(user, forKey: "currentUser")
-            //must comply with NSCoding, but can "hack" and change user back to JSON.
-            
-            defaults.synchronize()
-        }
-        
-            
     }
 
 }
