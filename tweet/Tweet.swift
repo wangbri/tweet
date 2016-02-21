@@ -31,19 +31,55 @@ class Tweet: NSObject {
         let tempDate = formatter.dateFromString(createdAtString!)
         
         var finalFormatter = NSDateFormatter()
+        
+        let currentHour = NSCalendar.currentCalendar().component(.Hour, fromDate: NSDate())
+        //gets current hour so you can account for dates that are more than 24 hours and set a different format for them
+        
         finalFormatter.dateFormat = "H"
         
-        createdAt = finalFormatter.stringFromDate(tempDate!)
+        let createdAtTemp = finalFormatter.stringFromDate(tempDate!)
         
         //would prefer static NSDateFormatter
         //could make createdAt a lazy property
         
-        print(createdAt)
+        let createdAtTime: Int? = Int(createdAtTemp)
+        print(createdAtTime)
+        
+        /*if currentHour > createdAtTime {
+            createdAt = finalFormatter.stringFromDate(tempDate!)
+            createdAt = "\(createdAt!)h"
+        } else if currentHour < createdAtTime {
+            finalFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+            createdAt = finalFormatter.stringFromDate(tempDate!)
+        } else {
+            createdAt = finalFormatter.stringFromDate(tempDate!)
+        }*/
         
         
-        let hour = NSCalendar.currentCalendar().component(.Hour, fromDate: NSDate())
-        //gets current hour so you can account for dates that are more than 24 hours and set a different format for them
-        print(hour)
+        if NSCalendar.currentCalendar().isDateInToday(tempDate!) {
+            createdAt = finalFormatter.stringFromDate(tempDate!)
+            createdAt = "\(createdAt!)h"
+        } else {
+            finalFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+            createdAt = finalFormatter.stringFromDate(tempDate!)
+        }
+        
+        
+        
+        
+        /*if date1.compare(date2) == NSComparisonResult.OrderedDescending
+        {
+        NSLog("date1 after date2");
+        } else if date1.compare(date2) == NSComparisonResult.OrderedAscending
+        {
+        NSLog("date1 before date2");
+        } else
+        {
+        NSLog("dates are equal");
+        }*/
+
+
+
         
         
         

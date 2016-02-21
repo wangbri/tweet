@@ -20,7 +20,7 @@ class TweetCell: UITableViewCell {
     var tweet: Tweet! {
         didSet {
                 let createdAt = tweet.createdAt!
-                timestamp.text = "\(createdAt)h"
+                timestamp.text = createdAt
                 tweetText.text = tweet.text
                         
                     if let _ = tweet.user!.profileUrl {
@@ -30,7 +30,6 @@ class TweetCell: UITableViewCell {
                         profileImage.setImageWithURL(userDict.profileUrl!)
                         screenname.text = "@\(userDict.screenname!)"
                         username.text = userDict.name
-                        print("user touched")
                             
                     }
             
