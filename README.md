@@ -33,14 +33,18 @@ Please list two areas of the assignment you'd like to **discuss further with you
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
+Right gif is more thorough but left showcases custom NSDate formatting
+
+
 
 <img src='http://imgur.com/l3aoIlm.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 <img src='http://imgur.com/jXNmaOP.gif' title='More thorough walkthrough' width='' alt='Video Walkthrough' />
+
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
 Didn't quite get the tweets to load up sequentially by date.
 
 ## License
