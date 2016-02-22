@@ -36,6 +36,8 @@ class User: NSObject {
         
         tagline = dictionary["description"] as? String
         self.dictionary = dictionary
+        
+        
     }
     
     //persistence, keep user data

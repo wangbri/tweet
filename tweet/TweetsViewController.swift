@@ -12,6 +12,7 @@ import AFNetworking
 class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var tweets: [Tweet]?
+    var tweet: TweetCell?
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -32,12 +33,52 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.tableView.reloadData()
         })
         
+        
+        
+        
+        
+        
         tableView.rowHeight = UITableViewAutomaticDimension
         //use auto-layout constraint rules
         tableView.estimatedRowHeight = 120
         //prevents auto-layout from calculating all of the scroll height dimension at once
         
     }
+    
+    @IBAction func onRetweet(sender: AnyObject) {
+        
+        var subviewPostion: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
+        var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(subviewPostion)!
+        let cell =  self.tableView.cellForRowAtIndexPath(indexPath)! as! TweetCell
+        let tweet = tweets![indexPath.row]
+        let tweetID = tweet.tweetID
+        TwitterClient.sharedInstance.retweetItem(["id": tweetID!]) { (tweet, error) -> () in
+            
+            if (tweet != nil) {
+                self.tweets![indexPath.row].retweetCount = self.tweets![indexPath.row].retweetCount as! Int + 1
+                var indexPath = NSIndexPath(forRow: indexPath.row, inSection: 0)
+                
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    @IBAction func onLike(sender: AnyObject) {
+        
+        var subviewPostion: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
+        var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(subviewPostion)!
+        let cell =  self.tableView.cellForRowAtIndexPath(indexPath)! as! TweetCell
+        let tweet = tweets![indexPath.row]
+        let tweetID = tweet.tweetID
+        TwitterClient.sharedInstance.likeItem(["id": tweetID!]) { (tweet, error) -> () in
+            if (tweet != nil) {
+                self.tweets![indexPath.row].likeCount = self.tweets![indexPath.row].likeCount as! Int + 1
+                var indexPath = NSIndexPath(forRow: indexPath.row, inSection: 0)
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

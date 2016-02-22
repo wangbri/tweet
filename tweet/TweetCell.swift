@@ -17,11 +17,20 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var timestamp: UILabel!
     @IBOutlet weak var tweetText: UILabel!
     
+    @IBOutlet weak var retweetLabel: UILabel!
+    
+    @IBOutlet weak var likeLabel: UILabel!
+    
     var tweet: Tweet! {
         didSet {
                 let createdAt = tweet.createdAt!
                 timestamp.text = createdAt
                 tweetText.text = tweet.text
+            
+                likeLabel.text = "\(tweet.likeCount as! Int)"
+                retweetLabel.text = "\(tweet.retweetCount as! Int)"
+            
+            
                         
                     if let _ = tweet.user!.profileUrl {
                         
@@ -30,7 +39,7 @@ class TweetCell: UITableViewCell {
                         profileImage.setImageWithURL(userDict.profileUrl!)
                         screenname.text = "@\(userDict.screenname!)"
                         username.text = userDict.name
-                            
+                        
                     }
             
             

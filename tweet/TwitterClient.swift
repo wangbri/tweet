@@ -33,7 +33,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         GET("1.1/statuses/home_timeline.json", parameters: params, success: { (operation: NSURLSessionDataTask!, response: AnyObject?) -> Void in
             //print("home timeline: \(response)")
             
-            var tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+                var tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
             
                 completion(tweets: tweets, error: nil)
             
@@ -43,9 +43,33 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
         
         
-        
-        
     }
+    
+    func retweetItem(params: NSDictionary?, completion: (tweet: Tweet?, error: NSError?) -> ()) {
+        POST("1.1/statuses/retweet/\(params!["id"] as! Int).json", parameters: params, success: { (operation: NSURLSessionDataTask!, response: AnyObject?) -> Void in
+            var tweet = Tweet.tweetAsDictionary(response as! NSDictionary)
+            print("retweeted")
+            completion(tweet: tweet, error: nil)
+            }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                
+                completion(tweet: nil, error: error)
+        }
+    }
+    
+    func likeItem(params: NSDictionary?, completion: (tweet: Tweet?, error: NSError?) -> ()) {
+        POST("1.1/favorites/create.json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            var tweet = Tweet.tweetAsDictionary(response as! NSDictionary)
+            print("liked tweet")
+            completion(tweet: tweet, error: nil)
+            }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                completion(tweet: nil, error: error)
+                
+        }
+    }
+    
+    
+    
+    
     
     func loginWithCompletion(completion: (user: User?, error: NSError?) -> ()) {
         //call completion block with either user or error
