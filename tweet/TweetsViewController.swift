@@ -50,6 +50,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         var subviewPostion: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
         var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(subviewPostion)!
         let cell =  self.tableView.cellForRowAtIndexPath(indexPath)! as! TweetCell
+        cell.retweetButton.setImage(UIImage(named: "retweet-action-on-green"), forState: UIControlState.Normal)
         let tweet = tweets![indexPath.row]
         let tweetID = tweet.tweetID
         TwitterClient.sharedInstance.retweetItem(["id": tweetID!]) { (tweet, error) -> () in
@@ -61,6 +62,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.tableView.reloadData()
             }
         }
+        
     }
     
     @IBAction func onLike(sender: AnyObject) {
@@ -70,6 +72,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell =  self.tableView.cellForRowAtIndexPath(indexPath)! as! TweetCell
         let tweet = tweets![indexPath.row]
         let tweetID = tweet.tweetID
+        cell.likeButton.setImage(UIImage(named: "like-action-on-red"), forState: UIControlState.Normal)
+
         TwitterClient.sharedInstance.likeItem(["id": tweetID!]) { (tweet, error) -> () in
             if (tweet != nil) {
                 self.tweets![indexPath.row].likeCount = self.tweets![indexPath.row].likeCount as! Int + 1
@@ -77,6 +81,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.tableView.reloadData()
             }
         }
+        
     }
     
     override func didReceiveMemoryWarning() {

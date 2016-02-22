@@ -196,8 +196,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="likeButton" destination="2lD-GT-gDY" id="uRm-ay-ui4"/>
                                             <outlet property="likeLabel" destination="odz-og-xet" id="cLm-1l-b4W"/>
                                             <outlet property="profileImage" destination="WdS-gf-1Ta" id="sWp-gM-MKK"/>
+                                            <outlet property="retweetButton" destination="zOW-DI-KZE" id="shi-De-8fO"/>
                                             <outlet property="retweetLabel" destination="pmf-YQ-892" id="DWs-q6-Uuc"/>
                                             <outlet property="screenname" destination="ANN-dr-O4h" id="ZYf-2M-m4F"/>
                                             <outlet property="timestamp" destination="3Qh-nR-2PR" id="lKo-RR-Zos"/>

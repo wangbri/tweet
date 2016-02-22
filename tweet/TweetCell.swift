@@ -21,6 +21,10 @@ class TweetCell: UITableViewCell {
     
     @IBOutlet weak var likeLabel: UILabel!
     
+    @IBOutlet weak var likeButton: UIButton!
+    
+    @IBOutlet weak var retweetButton: UIButton!
+    
     var tweet: Tweet! {
         didSet {
                 let createdAt = tweet.createdAt!
