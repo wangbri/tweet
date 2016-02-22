@@ -22,7 +22,8 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [x] added date formatting for dates posted past 24 hours
+- [x] added custom date formatting in style of hours for dates posted within the last 24 hours
+- [x] retweet and like buttons light up
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
