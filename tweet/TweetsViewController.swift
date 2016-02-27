@@ -28,7 +28,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.tableView.delegate = self
             
             for tweet in self.tweets! {
-                print(tweet.text)
+                //print(tweet.text)
             }
             self.tableView.reloadData()
         })

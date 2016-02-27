@@ -28,7 +28,7 @@ class Tweet: NSObject {
         tweetID = dictionary["id"] as? Int
         retweetCount = dictionary["retweet_count"] as? Int
         likeCount = dictionary["favorite_count"] as? Int
-        print(tweetID)
+        //print(tweetID)
         
         
         
@@ -36,25 +36,47 @@ class Tweet: NSObject {
         
         //need to parse
         var formatter = NSDateFormatter()
+        
+        formatter.timeZone = NSTimeZone(name: "CST")
+        
         formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
+        //created in UTC time
         
         //code for above at NSDateFormatter documentation
+        
+        
+        
         let tempDate = formatter.dateFromString(createdAtString!)
         
-        var finalFormatter = NSDateFormatter()
+        print(formatter.timeZone)
         
-        let currentHour = NSCalendar.currentCalendar().component(.Hour, fromDate: NSDate())
+        
         //gets current hour so you can account for dates that are more than 24 hours and set a different format for them
+        print(text)
+        //print("created at\(createdAtString)")
+        print(tempDate)
         
-        finalFormatter.dateFormat = "H"
         
-        let createdAtTemp = finalFormatter.stringFromDate(tempDate!)
+        
+        //dateFormatter.dateFormat = /*find out and place date format from http://userguide.icu-project.org/formatparse/datetime*/
+        
+        //dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        
+        
+        let dateFormatter = NSDateFormatter()
+        
+        dateFormatter.dateFormat = "H"
+        
+        let createdAtTemp = dateFormatter.stringFromDate(tempDate!)
         
         //would prefer static NSDateFormatter
         //could make createdAt a lazy property
         
+        print(createdAtTemp)
+        
         let createdAtTime: Int? = Int(createdAtTemp)
-        print(createdAtTime)
+        //print(createdAtTime)
         
         /*if currentHour > createdAtTime {
             createdAt = finalFormatter.stringFromDate(tempDate!)
@@ -67,12 +89,14 @@ class Tweet: NSObject {
         }*/
         
         
+        let currentHour = NSCalendar.currentCalendar().component(.Hour, fromDate: NSDate())
+        
+        
         if NSCalendar.currentCalendar().isDateInToday(tempDate!) {
-            createdAt = finalFormatter.stringFromDate(tempDate!)
-            createdAt = "\(createdAt!)h"
+            createdAt = "\(abs(createdAtTime! - currentHour))h"
         } else {
-            finalFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
-            createdAt = finalFormatter.stringFromDate(tempDate!)
+            dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+            createdAt = dateFormatter.stringFromDate(tempDate!)
         }
         
         
