@@ -144,6 +144,8 @@ class TweetProfileViewController: UIViewController, UITableViewDelegate, UITable
             self.tableView.dataSource = self
             self.tableView.delegate = self
             
+            print("ERROROROR\(error)")
+            
             for tweet in self.tweets! {
                 print(tweet.text)
                 
