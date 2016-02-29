@@ -25,6 +25,8 @@ class TweetCell: UITableViewCell {
     
     @IBOutlet weak var retweetButton: UIButton!
     
+    @IBOutlet weak var replyButton: UIButton!
+    
     var profileURL: NSURL?
     
     var profileBackURL: NSURL?
@@ -32,6 +34,10 @@ class TweetCell: UITableViewCell {
     var followersCount: Int?
     var followingCount: Int?
     var tweetsCount: Int?
+    
+    //var usernameS: String?
+    
+    var screennameS: String?
     
     
     var tweet: Tweet! {
@@ -52,6 +58,8 @@ class TweetCell: UITableViewCell {
                         followersCount = userDict.followersCount
                         followingCount = userDict.followingCount
                         tweetsCount = userDict.tweetsCount
+                        //usernameS = userDict.name
+                        screennameS = userDict.screenname
                         
                         self.profileURL = userDict.profileUrl!
                         

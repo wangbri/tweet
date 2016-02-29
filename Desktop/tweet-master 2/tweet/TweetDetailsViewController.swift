@@ -18,7 +18,15 @@ class TweetDetailsViewController: UIViewController, UITableViewDataSource, UITab
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var retweetButton: UIButton!
     
+    @IBOutlet weak var replyField: UITextField!
+    @IBOutlet weak var replyButton: UIButton!
     @IBOutlet weak var likeButton: UIButton!
+    
+    var screenname: String?
+    
+    @IBOutlet weak var charCount: UILabel!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -31,6 +39,22 @@ class TweetDetailsViewController: UIViewController, UITableViewDataSource, UITab
         dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
         dateFormatter.timeStyle = .MediumStyle
         tweet.createdAt = dateFormatter.stringFromDate(tweet.tempDate!)
+        
+        replyField.text = "@\(screenname!)"
+        replyField.textColor = UIColor.lightGrayColor()
+        
+        let count = replyField.text?.characters.count
+        charCount.text = "\(140-count!)"
+        
+        self.replyField.addTarget(self, action: "textFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,7 +62,14 @@ class TweetDetailsViewController: UIViewController, UITableViewDataSource, UITab
         // Dispose of any resources that can be recreated.
     }
     
-    
+    func textFieldDidChange(textField: UITextField){
+        if replyField.textColor == UIColor.lightGrayColor() {
+            replyField.textColor = UIColor.blackColor()
+            
+        }
+        let count = textField.text?.characters.count
+        charCount.text = "\(140-count!)"
+    }
     
     
     
@@ -56,9 +87,9 @@ class TweetDetailsViewController: UIViewController, UITableViewDataSource, UITab
         var subviewPostion: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
         var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(subviewPostion)!
         let cell =  self.tableView.cellForRowAtIndexPath(indexPath)! as! TweetCell
-        cell.retweetButton.setImage(UIImage(named: "retweet-action-on-green"), forState: UIControlState.Normal)
         let tweet = self.tweet
         let tweetID = tweet.tweetID
+        cell.retweetButton.setImage(UIImage(named: "retweet-action-on-green"), forState: UIControlState.Normal)
         TwitterClient.sharedInstance.retweetItem(["id": tweetID!]) { (tweet, error) -> () in
             
             if (tweet != nil) {
@@ -88,6 +119,21 @@ class TweetDetailsViewController: UIViewController, UITableViewDataSource, UITab
             }
         }
         
+    }
+    @IBAction func onReply(sender: AnyObject) {
+        var subviewPostion: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
+        var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(subviewPostion)!
+        let cell =  self.tableView.cellForRowAtIndexPath(indexPath)! as! TweetCell
+        let tweet = self.tweet
+        let tweetID = tweet.tweetID
+        cell.replyButton.setImage(UIImage(named: "reply-action-pressed_0"), forState: UIControlState.Normal)
+        
+        print("REPLYPRESSED")
+        
+        TwitterClient.sharedInstance.replyItem(replyField.text, params: tweetID)
+        
+        replyField.text = "@\(screenname!)"
+        replyField.textColor = UIColor.lightGrayColor()
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

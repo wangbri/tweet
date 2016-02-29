@@ -81,6 +81,27 @@ class TwitterClient: BDBOAuth1SessionManager {
         
     }
     
+    func replyItem(text: String?, params: NSNumber?)
+    {
+        var encodedText = text!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        
+        print("PARAMSPARAMSPARAMS\(encodedText!)")
+        
+        print(params!)
+        
+        
+        POST("1.1/statuses/update.json?status=\(encodedText!)&in_reply_to_status_id=\(params!)", parameters: nil, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            //completion(tweets: response, error: nil)
+            print("REPLYEDREPLYEDREPLYEDREPLYED")
+            
+            }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                print("failed to tweet")
+                //completion(tweets: nil, error: error)
+        }
+        
+    }
+    
     func getStatus(params: NSDictionary?, completion: (returns: AnyObject?, error: NSError?) -> ()) {
         GET("1.1/application/rate_limit_status.json?resources=help,users,search,statuses", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
             

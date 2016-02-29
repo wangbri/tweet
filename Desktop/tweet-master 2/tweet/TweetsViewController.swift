@@ -184,6 +184,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         vc.tweet = tweet
         
+        vc.screenname = segueCell?.screennameS
+        
         
         self.presentViewController(vc, animated: true, completion: nil)
         
