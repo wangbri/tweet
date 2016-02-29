@@ -19,20 +19,48 @@ class ComposeTweetViewController: UIViewController {
     
     @IBOutlet weak var tweetField: UITextField!
     
+    @IBOutlet weak var charCount: UILabel!
+    
+    var screennamee: String?
+    
+    var usernamee: String?
+    
     var profileUrl: NSURL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         profileView.setImageWithURL(profileUrl!)
         
+        username.text = usernamee
+        screenname.text = "@\(screennamee!)"
+        
+        let count = tweetField.text?.characters.count
+        charCount.text = "\(140-count!)"
+        
+        self.tweetField.addTarget(self, action: "textFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
+        
         // Do any additional setup after loading the view.
     }
-
+    @IBAction func onBack(sender: AnyObject) {
+            
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func textFieldDidChange(textField: UITextField) {
+        //your code
+        let count = textField.text?.characters.count
+        charCount.text = "..\(140-count!)"
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func onTweet(sender: AnyObject) {
+        TwitterClient.sharedInstance.composeItem(tweetField.text)
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+
 
     /*
     // MARK: - Navigation

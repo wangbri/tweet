@@ -15,6 +15,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //var tweet: TweetCell?
     
     var segueCell: TweetCell?
+    
+    var currentUser: User?
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -22,6 +24,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
         TwitterClient.sharedInstance.getStatus(nil, completion: {(returns, error) -> () in
             print(returns)
+            print(error)
         })
         TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion: { (tweets, error) -> () in
         // Do any additional setup after loading the view.
@@ -32,9 +35,9 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.tableView.dataSource = self
             self.tableView.delegate = self
             
-            for tweet in self.tweets! {
+            //for tweet in self.tweets! {
                 //print(tweet.text)
-            }
+            //}
             self.tableView.reloadData()
         })
         
@@ -55,13 +58,17 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("composeView") as! ComposeTweetViewController
         
-        vc.modalTransitionStyle = UIModalTransitionStyle.PartialCurl
+        //vc.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
         
-        vc.screenname.text = _currentUser!.screenname
+        print(User.currentUser?.screenname)
         
-        vc.username.text = _currentUser!.name
+        vc.screennamee = User.currentUser?.screenname
         
-        vc.profileUrl = _currentUser!.profileUrl
+        vc.usernamee = User.currentUser?.name
+        
+        vc.profileUrl = User.currentUser?.profileUrl
+        
+        print(User.currentUser?.profileUrl)
         
         
         self.presentViewController(vc, animated: true, completion: nil)
@@ -129,6 +136,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         
         cell.tweet = self.tweets![indexPath.row]
+        
+        
 
         return cell
     }

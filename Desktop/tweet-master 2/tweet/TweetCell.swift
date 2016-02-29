@@ -55,7 +55,9 @@ class TweetCell: UITableViewCell {
                         
                         self.profileURL = userDict.profileUrl!
                         
-                        self.profileBackURL = userDict.profileBackUrl!
+                        if userDict.profileBackUrl != nil {
+                            self.profileBackURL = userDict.profileBackUrl!
+                        }
                         
                         profileImage.setImageWithURL(userDict.profileUrl!)
                         screenname.text = "@\(userDict.screenname!)"

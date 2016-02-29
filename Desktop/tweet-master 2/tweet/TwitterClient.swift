@@ -40,6 +40,7 @@ class TwitterClient: BDBOAuth1SessionManager {
             }, failure: { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
                 print("error getting home timeline")
                 completion(tweets: nil, error: error)
+                print(error)
         })
         
         
@@ -62,12 +63,16 @@ class TwitterClient: BDBOAuth1SessionManager {
         
     }
     
-    func composeItem(params: String?, completion: (tweets: Tweet?, error: NSError?) -> ())
+    func composeItem(text: String?)
     {
-           
-            POST("1.1/statuses/update.json?status=\(params)", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        var encodedText = text!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        
+        print("PARAMSPARAMSPARAMS\(encodedText!)")
+        
+        
+            POST("1.1/statuses/update.json?status=\(encodedText!)", parameters: nil, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
                 
-                    //completion(tweets: tweet, error: nil)
+                    //completion(tweets: response, error: nil)
                 
                 }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
                 print("failed to tweet")

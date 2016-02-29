@@ -29,6 +29,7 @@ class ViewController: UIViewController {
             (user: User?, error: NSError?) in
             if user != nil {
                 //perform segue if login successful
+                
                 self.performSegueWithIdentifier("loginSegue", sender: self)
                 //because the closure can be saved, can immediately specify
             } else {

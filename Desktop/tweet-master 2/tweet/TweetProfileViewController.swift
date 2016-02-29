@@ -65,8 +65,10 @@ class TweetProfileViewController: UIViewController, UITableViewDelegate, UITable
         
         self.profileImage.layer.cornerRadius = 10.0
         
+        if profileBackURL != nil {
+            profileBackImage.setImageWithURL(profileBackURL!)
+        }
         
-        profileBackImage.setImageWithURL(profileBackURL!)
         
         screenLabel.text = screenname
         
@@ -175,12 +177,12 @@ class TweetProfileViewController: UIViewController, UITableViewDelegate, UITable
         var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(subviewPostion)!
         let cell =  self.tableView.cellForRowAtIndexPath(indexPath)! as! TweetCell
         cell.retweetButton.setImage(UIImage(named: "retweet-action-on-green"), forState: UIControlState.Normal)
-        let tweet = self.tweet
-        let tweetID = self.tweet!.tweetID
+        let tweet = tweets![indexPath.row]
+        let tweetID = tweet.tweetID
         TwitterClient.sharedInstance.retweetItem(["id": tweetID!]) { (tweet, error) -> () in
             
             if (tweet != nil) {
-                self.tweet!.retweetCount = self.tweet!.retweetCount as! Int + 1
+                self.tweets![indexPath.row].retweetCount = self.tweets![indexPath.row].retweetCount as! Int + 1
                 var indexPath = NSIndexPath(forRow: indexPath.row, inSection: 0)
                 
                 self.tableView.reloadData()
@@ -194,26 +196,24 @@ class TweetProfileViewController: UIViewController, UITableViewDelegate, UITable
         var subviewPostion: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
         var indexPath: NSIndexPath = self.tableView.indexPathForRowAtPoint(subviewPostion)!
         let cell =  self.tableView.cellForRowAtIndexPath(indexPath)! as! TweetCell
-        let tweet = self.tweet
-        let tweetID = self.tweet!.tweetID
+        let tweet = tweets![indexPath.row]
+        let tweetID = tweet.tweetID
         cell.likeButton.setImage(UIImage(named: "like-action-on-red"), forState: UIControlState.Normal)
         
         TwitterClient.sharedInstance.likeItem(["id": tweetID!]) { (tweet, error) -> () in
             if (tweet != nil) {
-                self.tweet!.likeCount = self.tweet!.likeCount as! Int + 1
+                self.tweets![indexPath.row].likeCount = self.tweets![indexPath.row].likeCount as! Int + 1
                 var indexPath = NSIndexPath(forRow: indexPath.row, inSection: 0)
                 self.tableView.reloadData()
             }
         }
         
     }
+
     
     
     @IBAction func onBack(sender: AnyObject) {
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("TweetsViewController") as! TweetsViewController
-        
-        vc.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
-        
         
         self.presentViewController(vc, animated: true, completion: nil)
     }
